@@ -1,0 +1,47 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: jobtracker-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd!
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrong@Passw0rd!", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - sqldata:/var/opt/mssql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jobtracker-api
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=JobTrackerDb;User Id=sa;Password=YourStrong@Passw0rd!;TrustServerCertificate=True;
+      - Jwt__Key=ThisIsAVerySecureSecretKeyForJobTrackerApp123!
+      - Jwt__Issuer=JobTrackerApp
+      - Jwt__Audience=JobTrackerUsers
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./jobtracker-client
+      dockerfile: Dockerfile
+    container_name: jobtracker-client
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  sqldata:
