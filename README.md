@@ -1,17 +1,15 @@
 \# 💼 JobTracker: Full-Stack Enterprise Application
 
 
+!\[React]
 
-!\[React](https://img.shields.io/badge/React-20232A?style=for-the-badge\&logo=react\&logoColor=61DAFB)
+!\[ASP.NET Core]
 
-!\[ASP.NET Core](https://img.shields.io/badge/ASP.NET\_Core-512BD4?style=for-the-badge\&logo=dotnet\&logoColor=white)
+!\[Entity Framework Core]
 
-!\[Entity Framework Core](https://img.shields.io/badge/EF\_Core-512BD4?style=for-the-badge\&logo=dotnet\&logoColor=white)
+!\[Material UI]
 
-!\[Material UI](https://img.shields.io/badge/Material--UI-0081CB?style=for-the-badge\&logo=mui\&logoColor=white)
-
-!\[Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
-
+!\[Docker]
 
 
 \---
