@@ -36,8 +36,9 @@ const Login: React.FC = () => {
       try {
         const response = await authService.login(values);
         login(response.token);
-      } catch (err: any) {
-        setErrorMsg(err.response?.data?.message || 'Failed to login. Please check your credentials.');
+      } catch (err: unknown) {
+        const errorMsg = err as { response?: { data?: { message?: string } } };
+        setErrorMsg(errorMsg.response?.data?.message || 'Failed to login. Please check your credentials.');
       } finally {
         setSubmitting(false);
       }

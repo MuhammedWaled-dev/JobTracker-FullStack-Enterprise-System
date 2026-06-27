@@ -31,8 +31,9 @@ const Projects: React.FC = () => {
     try {
       const data = await projectService.getAll();
       setProjects(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load projects');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to load projects');
     } finally {
       setLoading(false);
     }
@@ -53,8 +54,9 @@ const Projects: React.FC = () => {
       try {
         await projectService.delete(id);
         fetchProjects(); // Refresh after delete
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to delete project');
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setError(error.response?.data?.message || 'Failed to delete project');
       }
     }
   };
@@ -67,8 +69,9 @@ const Projects: React.FC = () => {
         await projectService.create(values);
         handleClose();
         fetchProjects(); // Automatically refresh table
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to create project');
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setError(error.response?.data?.message || 'Failed to create project');
       } finally {
         setSubmitting(false);
       }

@@ -25,8 +25,9 @@ const Dashboard: React.FC = () => {
         ]);
         setProjects(fetchedProjects);
         setTasks(fetchedTasks);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load dashboard data');
+      } catch (err: unknown) {
+        const errorMsg = err as { response?: { data?: { message?: string } } };
+        setError(errorMsg.response?.data?.message || 'Failed to load dashboard data');
       } finally {
         setLoading(false);
       }

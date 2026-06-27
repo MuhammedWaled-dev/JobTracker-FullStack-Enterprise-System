@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box, Typography, Container, Button, Paper, CircularProgress, Alert,
@@ -57,7 +57,7 @@ const ProjectDetails: React.FC = () => {
   const [editTask, setEditTask] = useState<TaskDto | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     try {
@@ -69,16 +69,17 @@ const ProjectDetails: React.FC = () => {
       setProject(projectData);
       setTasks(tasksData);
       setUsers(usersData);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load project details');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to load project details');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [fetchData]);
 
   // ── Create Task ───────────────────────────────────────────────────────────
   const handleOpen = () => setOpenModal(true);
@@ -101,8 +102,9 @@ const ProjectDetails: React.FC = () => {
         });
         handleClose();
         fetchData();
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to create task');
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setError(error.response?.data?.message || 'Failed to create task');
       } finally {
         setSubmitting(false);
       }
@@ -134,8 +136,9 @@ const ProjectDetails: React.FC = () => {
         });
         handleCloseEdit();
         fetchData();
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to update task');
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setError(error.response?.data?.message || 'Failed to update task');
       } finally {
         setSubmitting(false);
       }
@@ -158,8 +161,9 @@ const ProjectDetails: React.FC = () => {
     try {
       await taskService.updateStatus(taskId, { status: newStatus });
       fetchData();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update task status');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to update task status');
     }
   };
 
@@ -168,8 +172,9 @@ const ProjectDetails: React.FC = () => {
       try {
         await taskService.delete(taskId);
         fetchData();
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to delete task');
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setError(error.response?.data?.message || 'Failed to delete task');
       }
     }
   };
@@ -178,12 +183,13 @@ const ProjectDetails: React.FC = () => {
     try {
       await taskService.assignUser(taskId, userId);
       fetchData();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to assign user');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to assign user');
     }
   };
 
-  const getStatusColor = (status: TaskStatus) => {
+  const getStatusColor = (status: TaskStatus | undefined): 'default' | 'primary' | 'success' => {
     switch (status) {
       case TaskStatus.Todo:  return 'default';
       case TaskStatus.Doing: return 'primary';
@@ -430,7 +436,7 @@ const ProjectDetails: React.FC = () => {
               <Typography variant="body2" color="textSecondary">Status</Typography>
               <Chip
                 label={detailTask?.status}
-                color={getStatusColor(detailTask?.status as TaskStatus) as any}
+                color={getStatusColor(detailTask?.status)}
                 size="small"
                 sx={{ mt: 0.5 }}
               />

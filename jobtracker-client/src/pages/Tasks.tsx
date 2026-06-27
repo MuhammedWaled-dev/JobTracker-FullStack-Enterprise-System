@@ -23,8 +23,9 @@ const Tasks: React.FC = () => {
     try {
       const data = await taskService.getAssignedTasks();
       setTasks(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load your tasks');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to load your tasks');
     } finally {
       setLoading(false);
     }
@@ -38,8 +39,9 @@ const Tasks: React.FC = () => {
     try {
       await taskService.updateStatus(taskId, { status: newStatus });
       fetchTasks();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update task status');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to update task status');
     }
   };
 
@@ -53,7 +55,7 @@ const Tasks: React.FC = () => {
     setDetailTask(null);
   };
 
-  const getStatusColor = (status: TaskStatus) => {
+  const getStatusColor = (status: TaskStatus | undefined): 'default' | 'primary' | 'success' => {
     switch (status) {
       case TaskStatus.Todo:  return 'default';
       case TaskStatus.Doing: return 'primary';
@@ -175,7 +177,7 @@ const Tasks: React.FC = () => {
               <Typography variant="body2" color="textSecondary">Status</Typography>
               <Chip
                 label={detailTask?.status}
-                color={getStatusColor(detailTask?.status as TaskStatus) as any}
+                color={getStatusColor(detailTask?.status)}
                 size="small"
                 sx={{ mt: 0.5 }}
               />

@@ -30,8 +30,9 @@ const Register: React.FC = () => {
       try {
         await authService.register(values);
         navigate('/login', { state: { message: 'Registration successful! Please login.' } });
-      } catch (err: any) {
-        setErrorMsg(err.response?.data?.message || 'Registration failed. Please try again.');
+      } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        setErrorMsg(error.response?.data?.message || 'Registration failed. Please try again.');
       } finally {
         setSubmitting(false);
       }
