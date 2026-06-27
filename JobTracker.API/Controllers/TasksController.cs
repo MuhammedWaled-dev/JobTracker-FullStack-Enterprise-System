@@ -46,7 +46,8 @@ namespace JobTracker.API.Controllers
         }
 
         /// <summary>Get all tasks belonging to a specific project.</summary>
-
+        /// هنا السيرفر يأخذ رقم المشروع من الرابط ويضعه في المتغير 
+        /// projectId لتبدأ عملية البحث.
         [HttpGet("project/{projectId:guid}")]
         public async Task<IActionResult> GetByProject(Guid projectId)
         {

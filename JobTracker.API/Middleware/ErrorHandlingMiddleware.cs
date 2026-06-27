@@ -13,7 +13,24 @@ namespace JobTracker.API.Middleware
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
 
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
+/*
+ من الذي يعطينا هذه القيم؟
+نحن لا نقوم بعمل 
+new ErrorHandlingMiddleware()
+ بأنفسنا في الكود.
+ (.NET Runtime):النظام
+هو المسؤول عن إنشاء هذا الكلاس.
+عندما يرى النظام أن الكلاس يحتاج لـ
+RequestDelegate
+ و
+ILogger<ErrorHandlingMiddleware>
+ فإنه يقوم بالبحث في الـ
+Service Container
+ عن هذه الخدمات.
+ويقوم بـ حقنهم
+(Injection)
+داخل الكلاس.
+*/      public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             _next   = next;
             _logger = logger;

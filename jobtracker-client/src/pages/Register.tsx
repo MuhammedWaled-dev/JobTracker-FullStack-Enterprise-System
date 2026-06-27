@@ -17,7 +17,8 @@ const validationSchema = Yup.object({
 });
 
 const Register: React.FC = () => {
-
+  //هو أداة تمكنك من نقل المستخدم من الصفحة الحالية navigate
+  //  إلى صفحة أخرى دون أن يضطر للضغط على زر "تحديث الصفحة" في المتصفح.
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
